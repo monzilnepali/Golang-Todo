@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/monzilnepali/Golang-Todo/db"
-	route "github.com/monzilnepali/Golang-Todo/routes"
+	todo "github.com/monzilnepali/Golang-Todo/routes"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -15,9 +15,9 @@ func main() {
 	defer db.DB.Close()
 	fmt.Println("db connected")
 
-	http.HandleFunc("/", route.Home)
-	http.HandleFunc("/fetchtodo", route.GetTodo)
-	http.HandleFunc("/addtodo", route.AddTodo)
+	http.HandleFunc("/", todo.Home)
+	http.HandleFunc("/fetchtodo", todo.GetTodo)
+	http.HandleFunc("/addtodo", todo.AddTodo)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)
