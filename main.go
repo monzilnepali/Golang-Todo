@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"todo/db"
-	route "todo/routes"
+
+	"github.com/monzilnepali/Golang-Todo/db"
+	route "github.com/monzilnepali/Golang-Todo/routes"
 
 	_ "github.com/go-sql-driver/mysql"
 )

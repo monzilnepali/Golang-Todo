@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"todo/handler"
-	"todo/model"
+
+	"github.com/monzilnepali/Golang-Todo/handler"
+	"github.com/monzilnepali/Golang-Todo/model"
 )
 
 //Home route

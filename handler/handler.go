@@ -2,8 +2,9 @@ package handler
 
 import (
 	"fmt"
-	"todo/db"
-	"todo/model"
+
+	"github.com/monzilnepali/Golang-Todo/db"
+	"github.com/monzilnepali/Golang-Todo/model"
 )
 
 func GetTodoList() []model.Todo {
