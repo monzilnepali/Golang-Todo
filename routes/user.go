@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	user "github.com/monzilnepali/Golang-Todo/model"
+	formValidation "github.com/monzilnepali/Golang-Todo/utils"
 )
 
 //Login handler
@@ -20,6 +23,18 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 	//getting email and password from req.body
 	decoder := json.NewDecoder(r.Body)
-	user := User{}
+	var newUser user.User
+	err := decoder.Decode(&newUser)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	emailError := formValidation.ValidateEmail(newUser.Email)
+	if emailError != nil {
+		http.Error(w, emailError.Error(), http.StatusBadRequest)
+		return
+
+	}
+
 	fmt.Fprint(w, "hello from signup")
 }
