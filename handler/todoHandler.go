@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
 	"log"
 
@@ -13,7 +12,7 @@ import (
 func GetTodoList(userID int) []model.Todo {
 	//getting todo list
 	fmt.Println("getrodolist called")
-	result, err := db.DB.Query("SELECT * FROM todo 	WHERE UserID=?", userID)
+	result, err := db.DB.Query("SELECT TodoID,Title,Iscompleted FROM todo 	WHERE UserID=?", userID)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -32,18 +31,18 @@ func GetTodoList(userID int) []model.Todo {
 
 }
 
-func AddTodo(userId int, todoTitle string) error {
+//AddTodoHandler
+func AddTodoHandler(userID int, todoTitle string) error {
 	fmt.Println("add todo called")
-	stmt,err:db.DB.Prepare("INSERT INTO todo(UserID,Title) VALUES(?,?")
-  if err!=nil{
+	stmt, err := db.DB.Prepare("INSERT INTO todo(UserID,Title) VALUES(?,?)")
+	if err != nil {
 		log.Fatal(err)
 	}
-	res,err:=stmt.Exec(userId,todoTitle)
-	if err !=nil{
+	_, err = stmt.Exec(userID, todoTitle)
+	if err != nil {
 		log.Fatal(err)
 		return err
 	}
 	return nil
-
 
 }

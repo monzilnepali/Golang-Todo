@@ -3,6 +3,7 @@ package routes
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/monzilnepali/Golang-Todo/handler"
@@ -31,24 +32,33 @@ func GetAllTodo(w http.ResponseWriter, r *http.Request, activeUser *model.User) 
 }
 
 //AddTodo route
-func AddTodo(w http.ResponseWriter, r *http.Request) {
+func AddTodo(w http.ResponseWriter, r *http.Request, activeUser *model.User) {
 	if r.Method != "POST" {
 		fmt.Fprint(w, r.Method+r.URL.Path+" cannot be resolve")
 	}
-	fmt.Fprint(w, "addtodo end point hit")
+	//getting title from reqest body
 	decoder := json.NewDecoder(r.Body)
-	var mytodo model.Todo
-	err := decoder.Decode(&mytodo)
+	var newTodo model.Todo
+	err := decoder.Decode(&newTodo)
 	if err != nil {
-		panic(err.Error())
+		log.Fatal(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
-	fmt.Println("todo title ", mytodo)
+	//addTodoHandler
+	err = handler.AddTodoHandler(activeUser.UserID, newTodo.Title)
+	if err != nil {
+		log.Fatal(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	}
+
+	fmt.Fprint(w, "Todo add")
+	return
 
 }
 
 //UpdateTodo handler
-func UpdateTodo(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "UPDATE" {
+func UpdateTodo(w http.ResponseWriter, r *http.Request, activeUser *model.User) {
+	if r.Method != "PUT" {
 		fmt.Fprint(w, r.Method+r.URL.Path+" cannot be resolve")
 	}
 
