@@ -6,8 +6,7 @@ import (
 
 	"github.com/monzilnepali/Golang-Todo/db"
 	"github.com/monzilnepali/Golang-Todo/middleware"
-	todo "github.com/monzilnepali/Golang-Todo/routes"
-	user "github.com/monzilnepali/Golang-Todo/routes"
+	"github.com/monzilnepali/Golang-Todo/routes"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -20,12 +19,14 @@ func init() {
 
 func main() {
 	defer db.DB.Close()
-	finalHandler := http.HandlerFunc(todo.Home)
-	http.Handle("/", middleware.AuthMiddleware(finalHandler))
-	http.HandleFunc("/fetchtodo", todo.GetTodo)
-	http.HandleFunc("/addtodo", todo.AddTodo)
-	http.HandleFunc("/signup", user.Signup)
-	http.HandleFunc("/login", user.Login)
+
+	http.HandleFunc("/", middleware.Auth(routes.Home))
+	// http.HandleFunc("/fetchtodo", middleware.AuthMiddleware( http.HandlerFunc(todo.GetTodo)))
+	http.HandleFunc("/fetchtodo", middleware.Auth(routes.GetAllTodo))
+
+	// http.HandleFunc("/addtodo", middleware.Auth(todo.AddTodo))
+	http.HandleFunc("/signup", routes.Signup)
+	http.HandleFunc("/login", routes.Login)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)

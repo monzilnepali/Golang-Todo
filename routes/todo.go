@@ -10,19 +10,22 @@ import (
 )
 
 //Home route
-func Home(w http.ResponseWriter, r *http.Request) {
+func Home(w http.ResponseWriter, r *http.Request, activeUser *model.User) {
 	fmt.Fprint(w, "root page")
+	fmt.Println("id of current active use", activeUser.UserID)
+
 }
 
 //GetTodo route
-func GetTodo(w http.ResponseWriter, r *http.Request) {
+func GetAllTodo(w http.ResponseWriter, r *http.Request, activeUser *model.User) {
 	//for get request only
 
 	if r.Method != "GET" {
 		fmt.Fprint(w, r.Method+r.URL.Path+" cannot be resolve")
 	}
+
 	w.Header().Set("Content-Type", "application/json")
-	todolist := handler.GetTodoList()
+	todolist := handler.GetTodoList(activeUser.UserID)
 	json.NewEncoder(w).Encode(todolist)
 
 }

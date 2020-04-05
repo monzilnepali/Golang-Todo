@@ -2,7 +2,7 @@ package model
 
 //User model
 type User struct {
-	Id       int    `json.id`
+	UserID   int    `json.userid`
 	Email    string `json.email`
 	Password string `json.password`
 }

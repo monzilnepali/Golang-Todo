@@ -25,7 +25,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 		http.Error(w, "something Went wrong", http.StatusInternalServerError)
-		return
+
 	}
 
 	if newUser.Email != "" && newUser.Password != "" {
@@ -33,7 +33,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		switch loginErr := loginErr.(type) {
 		case *userHandler.HttpError:
 			http.Error(w, loginErr.Message, loginErr.StatusCode)
-			return
+
 		case nil:
 			//signnup completed
 
@@ -45,7 +45,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	} else {
 		//empty email and password field
 		http.Error(w, "Invalid email and password field", http.StatusBadRequest)
-		return
+
 	}
 
 }
@@ -67,7 +67,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	switch signupErr := signupErr.(type) {
 	case *userHandler.HttpError:
 		http.Error(w, signupErr.Message, signupErr.StatusCode)
-		return
+
 	case nil:
 		//signnup completed
 		//send success feedback

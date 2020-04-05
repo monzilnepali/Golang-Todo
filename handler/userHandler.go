@@ -37,7 +37,7 @@ func NewHttpError(message string, statusCode int) error {
 func findUserViaEmail(email string) (user.User, error) {
 
 	var existingUser user.User
-	err := db.DB.QueryRow("SELECT ID, Email FROM user WHERE Email=?", email).Scan(&existingUser.Id, &existingUser.Email)
+	err := db.DB.QueryRow("SELECT UserID, Email FROM user WHERE Email=?", email).Scan(&existingUser.UserID, &existingUser.Email)
 	if err == sql.ErrNoRows {
 		fmt.Println("user doesnot exist")
 		return user.User{}, nil
@@ -55,7 +55,7 @@ func findUserViaEmail(email string) (user.User, error) {
 func findUserViaEmailAndPassword(email, password string) (user.User, error) {
 
 	var existingUser user.User
-	err := db.DB.QueryRow("SELECT ID, Email FROM user WHERE Email=? AND Password=?", email, password).Scan(&existingUser.Id, &existingUser.Email)
+	err := db.DB.QueryRow("SELECT UserID, Email FROM user WHERE Email=? AND Password=?", email, password).Scan(&existingUser.UserID, &existingUser.Email)
 	if err == sql.ErrNoRows {
 		return user.User{}, errors.New("Email address and password doesnot match")
 
@@ -139,12 +139,12 @@ func LoginHandler(user user.User) (string, error) {
 
 	fmt.Println("user id", existingUser)
 	//!generate JWT token
-	tokenString, err := jwt.GenerateToken(existingUser.Id)
+	tokenString, err := jwt.GenerateToken(existingUser.UserID)
 	if err != nil {
 		return "", NewHttpError(err.Error(), http.StatusInternalServerError)
 
 	}
-	fmt.Println("token string", tokenString)
+
 	//!send response back
 	return tokenString, nil
 

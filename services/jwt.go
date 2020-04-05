@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"log"
 
 	"github.com/dgrijalva/jwt-go"
@@ -21,7 +20,7 @@ func GenerateToken(userID int) (string, error) {
 	//create JWT claims
 
 	claims := jwt.MapClaims{}
-	claims["user_id"] = userID
+	claims["userId"] = userID
 	//declare token with algorithm used for signing and the claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	//create jwtString
@@ -47,6 +46,8 @@ func VerifyToken(tokenString string) (int, error) {
 		log.Fatal(err.Error())
 		return 0, errors.New("Unauthorized")
 	}
-	fmt.Println("id", claims["user_id"])
-	return claims["user_id"].(int), nil
+
+	// userID := claims["userId"]
+	id := claims["userId"].(float64)
+	return int(id), nil
 }
