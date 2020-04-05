@@ -15,16 +15,17 @@ import (
 func init() {
 	db.ConnectDB()
 	fmt.Println("db connected")
-	defer db.DB.Close()
+
 }
 
 func main() {
+	defer db.DB.Close()
 	finalHandler := http.HandlerFunc(todo.Home)
 	http.Handle("/", middleware.AuthMiddleware(finalHandler))
 	http.HandleFunc("/fetchtodo", todo.GetTodo)
 	http.HandleFunc("/addtodo", todo.AddTodo)
-	http.HandleFunc("/login", user.Login)
 	http.HandleFunc("/signup", user.Signup)
+	http.HandleFunc("/login", user.Login)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)

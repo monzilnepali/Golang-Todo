@@ -14,7 +14,7 @@ func GetTodoList() []model.Todo {
 	if err != nil {
 		panic(err.Error())
 	}
-
+	defer result.Close()
 	var todoList []model.Todo
 	for result.Next() {
 		var todo model.Todo
