@@ -23,7 +23,7 @@ func main() {
 	http.Handle("/", middleware.AuthMiddleware(finalHandler))
 	http.HandleFunc("/fetchtodo", todo.GetTodo)
 	http.HandleFunc("/addtodo", todo.AddTodo)
-	http.HandlerFunc("/login", user.Login)
+	http.HandleFunc("/login", user.Login)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)

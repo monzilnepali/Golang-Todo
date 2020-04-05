@@ -1,4 +1,4 @@
-package route
+package routes
 
 import (
 	"fmt"
@@ -8,11 +8,11 @@ import (
 //Login handler
 func Login(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Fprintf(w, "hello from login ssytem")
+	fmt.Fprint(w, "login system")
 
 }
 
 //Signup Handler
 func Signup(w http.ResponseWriter, r *http.Request) {
-	fmt.FPrintf(w, "hello from signup")
+	fmt.Fprint(w, "hello from signup")
 }
