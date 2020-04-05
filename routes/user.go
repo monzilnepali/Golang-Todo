@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -14,5 +15,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 //Signup Handler
 func Signup(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		fmt.Fprint(w, r.Method+r.URL.Path+" cannot be resolve")
+	}
+	//getting email and password from req.body
+	decoder := json.NewDecoder(r.Body)
+	user := User{}
 	fmt.Fprint(w, "hello from signup")
 }

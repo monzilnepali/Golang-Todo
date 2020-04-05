@@ -24,6 +24,7 @@ func main() {
 	http.HandleFunc("/fetchtodo", todo.GetTodo)
 	http.HandleFunc("/addtodo", todo.AddTodo)
 	http.HandleFunc("/login", user.Login)
+	http.HandleFunc("/signup", user.Signup)
 
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)
