@@ -43,6 +43,7 @@ func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	} else {
 		//empty email and password field
 		http.Error(w, "Invalid email and password field", http.StatusBadRequest)
+		return
 
 	}
 
@@ -63,6 +64,7 @@ func Signup(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	switch signupErr := signupErr.(type) {
 	case *userHandler.HttpError:
 		http.Error(w, signupErr.Message, signupErr.StatusCode)
+		return
 
 	case nil:
 		//signnup completed

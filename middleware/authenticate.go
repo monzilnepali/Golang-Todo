@@ -26,7 +26,7 @@ func Auth(h httprouter.Handle) httprouter.Handle {
 			res, err := jwt.VerifyToken(tokenString)
 			if err != nil {
 				http.Error(w, http.StatusText(401), http.StatusUnauthorized)
-
+				return
 			}
 
 			fmt.Println("logged In id ", res)
@@ -36,7 +36,7 @@ func Auth(h httprouter.Handle) httprouter.Handle {
 			h(w, r, ps)
 		} else {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
-
+			return
 		}
 
 	}
