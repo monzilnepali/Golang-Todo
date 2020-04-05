@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/julienschmidt/httprouter"
 	userHandler "github.com/monzilnepali/Golang-Todo/handler"
 	user "github.com/monzilnepali/Golang-Todo/model"
 )
@@ -13,11 +14,8 @@ import (
 //http custom error
 
 //Login handler
-func Login(w http.ResponseWriter, r *http.Request) {
+func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
-	if r.Method != "POST" {
-		fmt.Fprint(w, r.Method+r.URL.Path+" cannot be resolve")
-	}
 	//getting email and password from req.body
 	decoder := json.NewDecoder(r.Body)
 	var newUser user.User
@@ -45,16 +43,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	} else {
 		//empty email and password field
 		http.Error(w, "Invalid email and password field", http.StatusBadRequest)
+		return
 
 	}
 
 }
 
 //Signup Handler
-func Signup(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		fmt.Fprint(w, r.Method+r.URL.Path+" cannot be resolve")
-	}
+func Signup(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+
 	//getting email and password from req.body
 	decoder := json.NewDecoder(r.Body)
 	var newUser user.User
@@ -67,6 +64,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	switch signupErr := signupErr.(type) {
 	case *userHandler.HttpError:
 		http.Error(w, signupErr.Message, signupErr.StatusCode)
+		return
 
 	case nil:
 		//signnup completed

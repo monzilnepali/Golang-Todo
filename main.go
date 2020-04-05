@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"path"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/monzilnepali/Golang-Todo/db"
 	"github.com/monzilnepali/Golang-Todo/middleware"
 	"github.com/monzilnepali/Golang-Todo/routes"
@@ -20,15 +20,16 @@ func init() {
 
 func main() {
 	defer db.DB.Close()
-	fmt.Println("path", path.Base)
-	http.HandleFunc("/signup", routes.Signup)
-	http.HandleFunc("/login", routes.Login)
-	http.HandleFunc("/", middleware.Auth(routes.Home))
-	http.HandleFunc("/fetchtodo", middleware.Auth(routes.GetAllTodo))
-	http.HandleFunc("/addtodo", middleware.Auth(routes.AddTodo))
-	http.HandleFunc("/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
+	router := httprouter.New()
+	router.GET("/", routes.Home)
+	router.POST("/auth/signup", routes.Signup)
+	router.POST("/auth/login", routes.Login)
+	router.GET("/api/fetchtodo", middleware.Auth(routes.GetAllTodo))
+	router.PUT("/api/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
+	router.DELETE("/api/deletetodo/:id", middleware.Auth(routes.DeleteTodo))
+	router.POST("/api/addtodo", middleware.Auth(routes.AddTodo))
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8080", router); err != nil {
 		panic(err)
 	}
 }
