@@ -137,6 +137,7 @@ func LoginHandler(user user.User) (string, error) {
 
 	}
 
+	fmt.Println("user id", existingUser)
 	//!generate JWT token
 	tokenString, err := jwt.GenerateToken(existingUser.Id)
 	if err != nil {

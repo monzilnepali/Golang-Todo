@@ -2,6 +2,8 @@ package services
 
 import (
 	"errors"
+	"fmt"
+	"log"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -10,14 +12,16 @@ import (
 var jwtKey = []byte("todokey")
 
 type myCustomclaims struct {
-	id int `json.id`
+	userID int `json.userid`
 	jwt.StandardClaims
 }
 
 //GenerateToken jwt
 func GenerateToken(userID int) (string, error) {
 	//create JWT claims
-	claims := myCustomclaims{id: userID}
+
+	claims := jwt.MapClaims{}
+	claims["user_id"] = userID
 	//declare token with algorithm used for signing and the claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	//create jwtString
@@ -30,16 +34,19 @@ func GenerateToken(userID int) (string, error) {
 }
 
 //VerifyToken handler
-func VerifyToken(tokenString string) (string, error) {
+func VerifyToken(tokenString string) (int, error) {
 	// Initialize a new instance of `Claims`
 
-	claims := &Claims{}
+	claims := jwt.MapClaims{}
+
 	// Parse the JWT string and store the result in `claims`.
 	tkn, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
 	if err != nil && !tkn.Valid {
-		return "", errors.New("Unauthorized")
+		log.Fatal(err.Error())
+		return 0, errors.New("Unauthorized")
 	}
-	return claims.id, nil
+	fmt.Println("id", claims["user_id"])
+	return claims["user_id"].(int), nil
 }

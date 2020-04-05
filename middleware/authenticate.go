@@ -16,7 +16,6 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 		//! extracting token from request header
 		token := r.Header["Authorization"]
-		fmt.Println("token", token)
 
 		if len(token) != 0 {
 			//! verify the token
@@ -24,10 +23,16 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			//* otherwise unauthorized response
 			tokenString := token[0]
 			res, err := jwt.VerifyToken(tokenString)
-			fmt.Println("logged In", claims.id)
+			if err != nil {
+				http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+				return
+			}
+
+			fmt.Println("logged In", res)
 			next.ServeHTTP(w, r)
 		} else {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			return
 		}
 
 	})
