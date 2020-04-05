@@ -24,7 +24,6 @@ func main() {
 	http.HandleFunc("/signup", routes.Signup)
 	http.HandleFunc("/login", routes.Login)
 	http.HandleFunc("/", middleware.Auth(routes.Home))
-	// http.HandleFunc("/fetchtodo", middleware.AuthMiddleware( http.HandlerFunc(todo.GetTodo)))
 	http.HandleFunc("/fetchtodo", middleware.Auth(routes.GetAllTodo))
 	http.HandleFunc("/addtodo", middleware.Auth(routes.AddTodo))
 	http.HandleFunc("/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
