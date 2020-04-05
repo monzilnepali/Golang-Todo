@@ -1,10 +1,11 @@
 package middleware
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 
-	"github.com/monzilnepali/Golang-Todo/model"
-
+	"github.com/julienschmidt/httprouter"
 	jwt "github.com/monzilnepali/Golang-Todo/services"
 )
 
@@ -45,9 +46,11 @@ import (
 // }
 
 //Auth middleware
-func Auth(fn func(http.ResponseWriter, *http.Request, *model.User)) http.HandlerFunc {
+func Auth(h httprouter.Handle) httprouter.Handle {
 
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+		fmt.Println("middleware ")
 		//! extracting token from request header
 		token := r.Header["Authorization"]
 
@@ -61,12 +64,25 @@ func Auth(fn func(http.ResponseWriter, *http.Request, *model.User)) http.Handler
 				http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 
 			}
-			activeUser := model.User{UserID: res}
-			fn(w, r, &activeUser)
+
+			fmt.Println("logged In id ", res)
+			//should not use basic type string as key in context.WithValue
+			// type userCtxKeyType int
+			// const userCtxKey userCtxKeyType = "userId"
+			// ctx := context.WithValue(r.Context(), userCtxKey, res)
+
+			// next.ServeHTTP(w, r.WithContext(ctx))
+
+			var s = res
+			ctx := r.Context()
+			ctx = context.WithValue(ctx, "userID", s)
+			r = r.WithContext(ctx)
+			h(w, r, ps)
 		} else {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 
 		}
+
 	}
 
 }

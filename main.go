@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"path"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/monzilnepali/Golang-Todo/db"
 	"github.com/monzilnepali/Golang-Todo/middleware"
 	"github.com/monzilnepali/Golang-Todo/routes"
@@ -20,15 +20,18 @@ func init() {
 
 func main() {
 	defer db.DB.Close()
-	fmt.Println("path", path.Base)
-	http.HandleFunc("/signup", routes.Signup)
-	http.HandleFunc("/login", routes.Login)
-	http.HandleFunc("/", middleware.Auth(routes.Home))
-	http.HandleFunc("/fetchtodo", middleware.Auth(routes.GetAllTodo))
-	http.HandleFunc("/addtodo", middleware.Auth(routes.AddTodo))
-	http.HandleFunc("/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
+	router := httprouter.New()
+	router.POST("/signup", routes.Signup)
+	router.POST("/login", routes.Login)
+	// router.GET("/:id", middleware.Auth(routes.Home))
+	router.GET("/fetchtodo", middleware.Auth(routes.GetAllTodo))
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	//	http.HandleFunc("/", middleware.Auth(routes.Home))
+	// http.HandleFunc("/fetchtodo", middleware.Auth(routes.GetAllTodo))
+	// http.HandleFunc("/addtodo", middleware.Auth(routes.AddTodo))
+	// http.HandleFunc("/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
+
+	if err := http.ListenAndServe(":8080", router); err != nil {
 		panic(err)
 	}
 }
