@@ -29,11 +29,17 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
+	//validate email pattern
 	emailError := formValidation.ValidateEmail(newUser.Email)
 	if emailError != nil {
 		http.Error(w, emailError.Error(), http.StatusBadRequest)
 		return
-
+	}
+	//validate password strength
+	passwordError := formValidation.ValidatePassword(newUser.Password)
+	if passwordError != nil {
+		http.Error(w, passwordError.Error(), http.StatusBadRequest)
+		return
 	}
 
 	fmt.Fprint(w, "hello from signup")
