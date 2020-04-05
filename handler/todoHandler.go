@@ -35,10 +35,29 @@ func GetTodoList(userID int) []model.Todo {
 func AddTodoHandler(userID int, todoTitle string) error {
 	fmt.Println("add todo called")
 	stmt, err := db.DB.Prepare("INSERT INTO todo(UserID,Title) VALUES(?,?)")
+	defer stmt.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
 	_, err = stmt.Exec(userID, todoTitle)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	return nil
+
+}
+
+func UpdateTodoStatus(userID, todoID int) error {
+	fmt.Println("update todo db ops")
+
+	stmt, err := db.DB.Prepare("UPDATE todo SET Iscompleted = NOT Iscompleted WHERE UserID=? AND TodoID=?")
+	defer stmt.Close()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	_, err = stmt.Exec(userID, todoID)
 	if err != nil {
 		log.Fatal(err)
 		return err

@@ -25,6 +25,7 @@ func main() {
 	router.POST("/login", routes.Login)
 	// router.GET("/:id", middleware.Auth(routes.Home))
 	router.GET("/fetchtodo", middleware.Auth(routes.GetAllTodo))
+	router.PUT("/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
 
 	//	http.HandleFunc("/", middleware.Auth(routes.Home))
 	// http.HandleFunc("/fetchtodo", middleware.Auth(routes.GetAllTodo))

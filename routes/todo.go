@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/monzilnepali/Golang-Todo/handler"
@@ -67,12 +68,28 @@ func AddTodo(w http.ResponseWriter, r *http.Request, activeUser *model.User) {
 }
 
 //UpdateTodo handler
-func UpdateTodo(w http.ResponseWriter, r *http.Request, activeUser *model.User) {
-	if r.Method != "PUT" {
-		fmt.Fprint(w, r.Method+r.URL.Path+" cannot be resolve")
+func UpdateTodo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	//getting user id via context
+	userID, ok := r.Context().Value("userID").(int)
+	if !ok {
+		fmt.Println("s is not type int")
+	}
+	//parse int
+	todoID, err := strconv.Atoi(ps.ByName("id"))
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 
 	fmt.Fprint(w, "update todo end point")
+	//update todo db operation
+	err = handler.UpdateTodoStatus(userID, todoID)
+	if err != nil {
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprint(w, "todo updated")
 
 }
 
