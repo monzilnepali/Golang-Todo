@@ -21,16 +21,13 @@ func init() {
 func main() {
 	defer db.DB.Close()
 	router := httprouter.New()
-	router.POST("/signup", routes.Signup)
-	router.POST("/login", routes.Login)
-	// router.GET("/:id", middleware.Auth(routes.Home))
-	router.GET("/fetchtodo", middleware.Auth(routes.GetAllTodo))
-	router.PUT("/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
-
-	//	http.HandleFunc("/", middleware.Auth(routes.Home))
-	// http.HandleFunc("/fetchtodo", middleware.Auth(routes.GetAllTodo))
-	// http.HandleFunc("/addtodo", middleware.Auth(routes.AddTodo))
-	// http.HandleFunc("/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
+	router.GET("/", routes.Home)
+	router.POST("/auth/signup", routes.Signup)
+	router.POST("/auth/login", routes.Login)
+	router.GET("/api/fetchtodo", middleware.Auth(routes.GetAllTodo))
+	router.PUT("/api/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
+	router.DELETE("/api/deletetodo/:id", middleware.Auth(routes.DeleteTodo))
+	router.POST("/api/addtodo", middleware.Auth(routes.AddTodo))
 
 	if err := http.ListenAndServe(":8080", router); err != nil {
 		panic(err)

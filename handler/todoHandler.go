@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -63,5 +64,36 @@ func UpdateTodoStatus(userID, todoID int) error {
 		return err
 	}
 	return nil
+
+}
+
+//DeleteTodoStatus handler
+func DeleteTodoStatus(userID, todoID int) error {
+	fmt.Println("delete todo db osp")
+
+	stmt, err := db.DB.Prepare("DELETE FROM todo WHERE UserID=? AND TodoID=?")
+	defer stmt.Close()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	res, err := stmt.Exec(userID, todoID)
+
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	//0 row affected error
+	count, err := res.RowsAffected()
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	if count == 0 {
+		return errors.New("cannot delete")
+	} else {
+
+		return nil
+	}
 
 }
