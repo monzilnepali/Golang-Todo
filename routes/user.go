@@ -29,7 +29,7 @@ func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if newUser.Email != "" && newUser.Password != "" {
 		tokenString, loginErr := userHandler.LoginHandler(newUser)
 		switch loginErr := loginErr.(type) {
-		case *userHandler.HttpError:
+		case *userHandler.HTTPError:
 			http.Error(w, loginErr.Message, loginErr.StatusCode)
 
 		case nil:
@@ -62,7 +62,7 @@ func Signup(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	signupErr := userHandler.SignupHandler(newUser)
 	switch signupErr := signupErr.(type) {
-	case *userHandler.HttpError:
+	case *userHandler.HTTPError:
 		http.Error(w, signupErr.Message, signupErr.StatusCode)
 		return
 

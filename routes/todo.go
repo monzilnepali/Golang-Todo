@@ -31,9 +31,16 @@ func GetAllTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	todolist := handler.GetTodoList(userID)
-	json.NewEncoder(w).Encode(todolist)
-	return
+	todolist, err := handler.GetTodoList(userID)
+	switch Err := err.(type) {
+	case *handler.HTTPError:
+		http.Error(w, Err.Message, Err.StatusCode)
+	case nil:
+		json.NewEncoder(w).Encode(todolist)
+		return
+	default:
+		panic(err.Error())
+	}
 
 }
 
@@ -59,14 +66,16 @@ func AddTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	}
 	//addTodoHandler
 	err = handler.AddTodoHandler(userID, newTodo.Title)
-	if err != nil {
-		log.Fatal(err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	switch Err := err.(type) {
+	case *handler.HTTPError:
+		http.Error(w, Err.Message, Err.StatusCode)
+	case nil:
+		fmt.Fprint(w, "Todo add")
 		return
+	default:
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		panic(err.Error())
 	}
-
-	fmt.Fprint(w, "Todo add")
-	return
 
 }
 
@@ -89,12 +98,16 @@ func UpdateTodo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	//update todo db operation
 	err = handler.UpdateTodoStatus(userID, todoID)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	switch Err := err.(type) {
+	case *handler.HTTPError:
+		http.Error(w, Err.Message, Err.StatusCode)
+	case nil:
+		fmt.Fprint(w, "Todo UPDATED")
 		return
+	default:
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		panic(err.Error())
 	}
-	fmt.Fprint(w, "Todo updated")
-	return
 
 }
 
@@ -116,11 +129,16 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 
 	err = handler.DeleteTodoStatus(userID, todoID)
-	if err != nil {
-		http.Error(w, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+
+	switch Err := err.(type) {
+	case *handler.HTTPError:
+		http.Error(w, Err.Message, Err.StatusCode)
+	case nil:
+		fmt.Fprint(w, "Todo DELETED")
 		return
+	default:
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		panic(err.Error())
 	}
-	fmt.Fprint(w, "Todo deleted")
-	return
 
 }
