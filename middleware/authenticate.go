@@ -9,6 +9,12 @@ import (
 	jwt "github.com/monzilnepali/Golang-Todo/services"
 )
 
+// RequestData hold json data of useid and todoid
+type RequestData struct {
+	UserID int `json:"userid"`
+	TodoID int `json:"todoid"`
+}
+
 //Auth middleware
 func Auth(h httprouter.Handle) httprouter.Handle {
 
@@ -29,7 +35,6 @@ func Auth(h httprouter.Handle) httprouter.Handle {
 				return
 			}
 
-			fmt.Println("logged In id ", res)
 			ctx := r.Context()
 			ctx = context.WithValue(ctx, "userID", res)
 			r = r.WithContext(ctx)
