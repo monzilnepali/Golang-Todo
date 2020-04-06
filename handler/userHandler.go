@@ -13,20 +13,6 @@ import (
 	formValidation "github.com/monzilnepali/Golang-Todo/utils"
 )
 
-type HttpError struct {
-	Message    string
-	StatusCode int
-}
-
-func (e *HttpError) Error() string {
-	return fmt.Sprintf("%s:%d", e.Message, e.StatusCode)
-}
-
-//NewHttpError creation
-func NewHttpError(message string, statusCode int) error {
-	return &HttpError{Message: message, StatusCode: statusCode}
-}
-
 //check exiting user
 
 //add new user
@@ -75,24 +61,24 @@ func SignupHandler(newUser user.User) error {
 	//validate email pattern
 	emailError := formValidation.ValidateEmail(newUser.Email)
 	if emailError != nil {
-		return NewHttpError(emailError.Error(), http.StatusBadRequest)
+		return NewHTTPError(emailError.Error(), http.StatusBadRequest)
 	}
 	//validate password strength
 	passwordError := formValidation.ValidatePassword(newUser.Password)
 	if passwordError != nil {
-		return NewHttpError(passwordError.Error(), http.StatusBadRequest)
+		return NewHTTPError(passwordError.Error(), http.StatusBadRequest)
 	}
 
 	//check whether email address already exist or not
 	_, err1 := findUserViaEmail(newUser.Email)
 	if err1 != nil {
-		return NewHttpError(err1.Error(), http.StatusBadRequest)
+		return NewHTTPError(err1.Error(), http.StatusBadRequest)
 	}
 
 	//if not add new user
 	err2 := addNewUser(newUser.Email, newUser.Password)
 	if err2 != nil {
-		return NewHttpError(err2.Error(), http.StatusInternalServerError)
+		return NewHTTPError(err2.Error(), http.StatusInternalServerError)
 	}
 	//successful signup
 	return nil
@@ -121,19 +107,19 @@ func LoginHandler(user user.User) (string, error) {
 	//validate email pattern
 	emailError := formValidation.ValidateEmail(user.Email)
 	if emailError != nil {
-		return "", NewHttpError(emailError.Error(), http.StatusBadRequest)
+		return "", NewHTTPError(emailError.Error(), http.StatusBadRequest)
 	}
 	//validate password strength
 	passwordError := formValidation.ValidatePassword(user.Password)
 	if passwordError != nil {
-		return "", NewHttpError(passwordError.Error(), http.StatusBadRequest)
+		return "", NewHTTPError(passwordError.Error(), http.StatusBadRequest)
 	}
 
 	//!check entry in database
 	existingUser, loginError := findUserViaEmailAndPassword(user.Email, user.Password)
 	if loginError != nil {
 		fmt.Println(loginError.Error())
-		return "", NewHttpError(loginError.Error(), http.StatusUnauthorized)
+		return "", NewHTTPError(loginError.Error(), http.StatusUnauthorized)
 
 	}
 
@@ -141,7 +127,7 @@ func LoginHandler(user user.User) (string, error) {
 	//!generate JWT token
 	tokenString, err := jwt.GenerateToken(existingUser.UserID)
 	if err != nil {
-		return "", NewHttpError(err.Error(), http.StatusInternalServerError)
+		return "", NewHTTPError(err.Error(), http.StatusInternalServerError)
 
 	}
 
