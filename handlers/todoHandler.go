@@ -18,8 +18,8 @@ func Home(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	return
 }
 
-//GetAllTodo handler
-func GetAllTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+//GetAllTodoHandler return todo list
+func GetAllTodoHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	//for get request only
 
 	//getting user id via context
@@ -44,8 +44,8 @@ func GetAllTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 }
 
-//AddTodo route
-func AddTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+//AddTodoHandler add todo
+func AddTodoHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	//getting user id via context
 	userID, ok := r.Context().Value("userID").(int)
@@ -79,8 +79,8 @@ func AddTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 }
 
-//UpdateTodo handler
-func UpdateTodo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+//UpdateTodoHandler Update todo status(toggle iscompleted field)
+func UpdateTodoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	//getting user id via context
 	userID, ok := r.Context().Value("userID").(int)
@@ -111,8 +111,8 @@ func UpdateTodo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 }
 
-//DeleteTodo handler
-func DeleteTodo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+//DeleteTodoHandler delete todo
+func DeleteTodoHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	//getting user id via context
 	userID, ok := r.Context().Value("userID").(int)

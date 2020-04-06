@@ -11,9 +11,14 @@ import (
 
 // RequestData hold json data of useid and todoid
 type RequestData struct {
-	UserID int `json:"userid"`
-	TodoID int `json:"todoid"`
+	m map[String] int
 }
+
+func (r RequestData) Get(key string) int{
+	  return r.m[key]
+}
+//context.value() make copy of 
+
 
 //Auth middleware
 func Auth(h httprouter.Handle) httprouter.Handle {
@@ -34,10 +39,12 @@ func Auth(h httprouter.Handle) httprouter.Handle {
 				http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 				return
 			}
-
+			//getting useID and todoID
+			v:=
 			ctx := r.Context()
 			ctx = context.WithValue(ctx, "userID", res)
 			r = r.WithContext(ctx)
+
 			h(w, r, ps)
 		} else {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
