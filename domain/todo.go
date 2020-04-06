@@ -1,4 +1,4 @@
-package handler
+package domain
 
 import (
 	"errors"
@@ -6,11 +6,17 @@ import (
 	"net/http"
 
 	"github.com/monzilnepali/Golang-Todo/db"
-	"github.com/monzilnepali/Golang-Todo/model"
 )
 
+//Todo model
+type Todo struct {
+	TodoID      int    `json:"todoid"`
+	Title       string `json:"title"`
+	Iscompleted bool   `json:"isCompleted"`
+}
+
 //GetTodoList handler
-func GetTodoList(userID int) ([]model.Todo, error) {
+func GetTodoList(userID int) ([]Todo, error) {
 	//getting todo list
 	fmt.Println("getrodolist called")
 	result, err := db.DB.Query("SELECT TodoID,Title,Iscompleted FROM todo 	WHERE UserID=?", userID)
@@ -19,9 +25,9 @@ func GetTodoList(userID int) ([]model.Todo, error) {
 		return nil, errors.New(err.Error())
 	}
 	defer result.Close()
-	var todoList []model.Todo
+	var todoList []Todo
 	for result.Next() {
-		var todo model.Todo
+		var todo Todo
 		err := result.Scan(&todo.TodoID, &todo.Title, &todo.Iscompleted)
 		if err != nil {
 			return nil, NewHTTPError("cannot GET todo", http.StatusInternalServerError)
@@ -34,8 +40,11 @@ func GetTodoList(userID int) ([]model.Todo, error) {
 }
 
 //AddTodoHandler handler
-func AddTodoHandler(userID int, todoTitle string) error {
+func AddTodoHandler(userID int, reqBody {}) error {
 	fmt.Println("add todo called")
+
+	//decoding the request body
+
 	stmt, err := db.DB.Prepare("INSERT INTO todo(UserID,Title) VALUES(?,?)")
 	defer stmt.Close()
 	if err != nil {

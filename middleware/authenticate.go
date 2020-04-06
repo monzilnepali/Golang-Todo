@@ -11,14 +11,14 @@ import (
 
 // RequestData hold json data of useid and todoid
 type RequestData struct {
-	m map[String] int
+	m map[String]int
 }
 
-func (r RequestData) Get(key string) int{
-	  return r.m[key]
+func (r RequestData) Get(key string) int {
+	return r.m[key]
 }
-//context.value() make copy of 
 
+//context.value() make copy
 
 //Auth middleware
 func Auth(h httprouter.Handle) httprouter.Handle {
@@ -40,7 +40,7 @@ func Auth(h httprouter.Handle) httprouter.Handle {
 				return
 			}
 			//getting useID and todoID
-			v:=
+
 			ctx := r.Context()
 			ctx = context.WithValue(ctx, "userID", res)
 			r = r.WithContext(ctx)

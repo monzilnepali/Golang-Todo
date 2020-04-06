@@ -1,4 +1,4 @@
-package handler
+package domain
 
 import (
 	"database/sql"
@@ -13,11 +13,12 @@ import (
 	formValidation "github.com/monzilnepali/Golang-Todo/utils"
 )
 
-//check exiting user
-
-//add new user
-
-//check email and pasword validation
+//User model
+type User struct {
+	UserID   int    `json:"userid"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
 
 //FindUserViaEmail handler
 func findUserViaEmail(email string) (user.User, error) {

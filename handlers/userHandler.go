@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os/user"
 
 	"github.com/julienschmidt/httprouter"
-	userHandler "github.com/monzilnepali/Golang-Todo/handler"
-	user "github.com/monzilnepali/Golang-Todo/model"
+	userHandler "github.com/monzilnepali/Golang-Todo/domain"
 )
 
 //http custom error

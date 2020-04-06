@@ -1,4 +1,4 @@
-package routes
+package handlers
 
 import (
 	"encoding/json"
@@ -8,8 +8,7 @@ import (
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/monzilnepali/Golang-Todo/handler"
-	"github.com/monzilnepali/Golang-Todo/model"
+	handler "github.com/monzilnepali/Golang-Todo/domain"
 )
 
 //Home route
@@ -65,7 +64,7 @@ func AddTodoHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params)
 		return
 	}
 	//addTodoHandler
-	err = handler.AddTodoHandler(userID, newTodo.Title)
+	err = handlers.AddTodoHandler(userID, r.Body)
 	switch Err := err.(type) {
 	case *handler.HTTPError:
 		http.Error(w, Err.Message, Err.StatusCode)

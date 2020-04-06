@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
 	"github.com/monzilnepali/Golang-Todo/db"
-	"github.com/monzilnepali/Golang-Todo/middleware"
-	"github.com/monzilnepali/Golang-Todo/routes"
+	"github.com/monzilnepali/Golang-Todo/router"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -20,16 +18,9 @@ func init() {
 
 func main() {
 	defer db.DB.Close()
-	router := httprouter.New()
-	router.GET("/", routes.Home)
-	router.POST("/auth/signup", routes.Signup)
-	router.POST("/auth/login", routes.Login)
-	router.GET("/api/fetchtodo", middleware.Auth(routes.GetAllTodo))
-	router.PUT("/api/updatetodo/:id", middleware.Auth(routes.UpdateTodo))
-	router.DELETE("/api/deletetodo/:id", middleware.Auth(routes.DeleteTodo))
-	router.POST("/api/addtodo", middleware.Auth(routes.AddTodo))
+	r := router.Routes()
 
-	if err := http.ListenAndServe(":8080", router); err != nil {
+	if err := http.ListenAndServe(":8080", r); err != nil {
 		panic(err)
 	}
 }
