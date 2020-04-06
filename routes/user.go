@@ -26,6 +26,7 @@ func Login(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	}
 
+	fmt.Println("newuserer", newUser)
 	if newUser.Email != "" && newUser.Password != "" {
 		tokenString, loginErr := userHandler.LoginHandler(newUser)
 		switch loginErr := loginErr.(type) {
