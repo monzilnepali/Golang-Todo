@@ -1,5 +1,5 @@
 # Golang-Todo
-Simple todo api in golang
+Simple todo api using golang
 
 
 
